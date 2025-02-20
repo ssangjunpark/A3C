@@ -4,6 +4,6 @@ ale-py
 moviepy
 pygame
 numpy
-scipi
+scipy
 matplotlib
 pandas
