@@ -1,0 +1,9 @@
+tensorflow
+gymnasium
+ale-py
+moviepy
+pygame
+numpy
+scipi
+matplotlib
+pandas
