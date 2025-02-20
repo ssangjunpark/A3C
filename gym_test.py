@@ -39,6 +39,8 @@ if __name__ == "__main__":
     env = RecordVideo(env, 'test_video_recording', lambda x : True)
 
     # if you have pygame installed, comment out line 38+39 and uncomment line 42. This will give you a live view of environment
+    # env = gym.make('ALE/Breakout-v5', render_mode='human')
+
     # we are going to play 10 episodes
     for episode_number in range(10):
         play_one_episode(env, episode_number + 1)
