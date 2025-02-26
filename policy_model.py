@@ -18,8 +18,6 @@ class Policy_Model:
         self.model.add(
             tf.keras.layers.Dense(self.action_space_sizes, activation='softmax')
             )
-        
-        
     
     def predict(self, states):
         return self.model(states)
@@ -41,15 +39,3 @@ class Policy_Model:
         gradients = tape.gradient(loss, self.model.trainable_variables)
 
         return gradients
-            
-
-
-
-
-
-
-
-
-        
-    
-    

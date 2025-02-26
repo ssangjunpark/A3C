@@ -31,5 +31,3 @@ class Value_Model:
         gradients = tape.gradient(loss, self.model.trainable_variables)
 
         return gradients
-
-        
