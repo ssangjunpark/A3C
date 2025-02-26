@@ -16,7 +16,7 @@ class Policy_Model:
 
         # add final softmax layer of size action space
         self.model.add(
-            tf.keras.layers.Dense(self.action_space_sizes, activation='softmax')
+            tf.keras.layers.Dense(self.action_space_size, activation='softmax')
             )
     
     def predict(self, states):

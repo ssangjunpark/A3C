@@ -18,5 +18,6 @@ class Feature_Extractor:
             self.model.add(
                 tf.keras.layers.Dense(units, activation='relu', kernel_initializer='he_uniform')
             )
-
+    
+    def iwantmymodelbro(self):
         return self.model
