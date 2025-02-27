@@ -28,7 +28,8 @@ def instantiate_workers(thread_safe_global_counter, returns_per_episode, num_wor
     
     for id in range(num_workers):
         worker = Worker(id, "ALE/Breakout-v5", MODEL_SIZE_INITIALIZAER, thread_safe_global_counter, returns_per_episode)
-    
+        workers.append(worker)
+
     return workers
 
 def main():
@@ -44,7 +45,20 @@ def main():
 
     returns_per_episode = []
 
-    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode, num_workers=1)
+    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode)
+
+    # print(workers)
+    # exit()
+
+    worker_threads = []
+    for worker in workers:
+        t = threading.Thread(target=worker.run, args=(TOTAL_NUMBER_OF_STEPS, UPDATE_PERIOD_STEPS, parent_policy_model, parent_value_model))
+        worker_threads.append(t)
+        t.start()
+
+    for t in worker_threads:
+        t.join()
+
 
     # lock = threading.Lock()
     
@@ -60,10 +74,10 @@ def main():
     # for t in worker_threads:
     #     t.join()
 
-    print(returns_per_episode)
+    # print(returns_per_episode)
 
-    worker = Worker(1, "ALE/Breakout-v5", MODEL_SIZE_INITIALIZAER, thread_safe_global_counter, returns_per_episode)
-    worker.run(TOTAL_NUMBER_OF_STEPS, UPDATE_PERIOD_STEPS, parent_policy_model, parent_value_model)
+    # worker = Worker(1, "ALE/Breakout-v5", MODEL_SIZE_INITIALIZAER, thread_safe_global_counter, returns_per_episode)
+    # worker.run(TOTAL_NUMBER_OF_STEPS, UPDATE_PERIOD_STEPS, parent_policy_model, parent_value_model)
 
 
 
