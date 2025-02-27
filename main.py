@@ -39,6 +39,7 @@ def main():
     parent_policy_model, parent_value_model = create_networks(lol.action_space.n, MODEL_SIZE_INITIALIZAER[0], MODEL_SIZE_INITIALIZAER[1], MODEL_SIZE_INITIALIZAER[2], MODEL_SIZE_INITIALIZAER[3])
     parent_policy_model.predict(np.expand_dims(obs, axis=0).astype(np.float32))
     parent_value_model.predict(np.expand_dims(obs, axis=0).astype(np.float32))
+    lol.close()
     thread_safe_global_counter = itertools.count()
 
     returns_per_episode = []

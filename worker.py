@@ -18,7 +18,16 @@ class Worker:
         self.return_list = return_list
 
         # create own copy of models
-        self.policy_model, self.value_model = create_networks(self.env.action_space.n, model_size_initializers[0], model_size_initializers[1], model_size_initializers[2], model_size_initializers[3])
+        # self.policy_model, self.value_model = create_networks(self.env.action_space.n, model_size_initializers[0], model_size_initializers[1], model_size_initializers[2], model_size_initializers[3])
+
+        lol = gym.make("ALE/Breakout-v5", render_mode='rgb_array') # bad design fix it one day :(
+        obs, _ = lol.reset()
+        obs = image_transformer(obs, [84, 84])
+        obs = np.stack([obs] * 4, axis=2)
+        self.policy_model, self.value_model = create_networks(lol.action_space.n, model_size_initializers[0], model_size_initializers[1], model_size_initializers[2], model_size_initializers[3])
+        self.policy_model.predict(np.expand_dims(obs, axis=0).astype(np.float32))
+        self.value_model.predict(np.expand_dims(obs, axis=0).astype(np.float32))
+        lol.close()
 
     def copy_param_from_parent(self, parent_policy_model, parent_value_model):
         self.policy_model.model.set_weights(parent_policy_model.model.get_weights())
@@ -84,14 +93,16 @@ class Worker:
         obs_transformed = image_transformer(obs, [84,84])
         # we stack 4 inital frame as our state // as shape (H x W x 4)
         obs = np.stack([obs_transformed] * 4, axis=2)
+        
+        self.copy_param_from_parent(parent_policy_model, parent_value_model)
 
         while not done:
             pi_obs = np.expand_dims(obs, axis=0).astype(np.float32)
             pi_eval = self.policy_model.predict(pi_obs)
             
-            # action = np.random.choice(self.env.action_space.n, p=pi_eval[0])
+            action = np.random.choice(self.env.action_space.n, p=pi_eval[0])
             #TODO: MAKE SURE TO REMOVE UNIFORM SAMPLEING
-            action = self.env.action_space.sample()
+            # action = self.env.action_space.sample()
             n_step_state.append(obs)
             n_step_action.append(action)
 
