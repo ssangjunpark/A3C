@@ -101,6 +101,7 @@ class Worker:
             pi_eval = self.policy_model.predict(pi_obs)
             
             action = np.random.choice(self.env.action_space.n, p=pi_eval[0])
+            # print("Sum of pi_eval[0]:", np.sum(pi_eval[0]))
             #TODO: MAKE SURE TO REMOVE UNIFORM SAMPLEING
             # action = self.env.action_space.sample()
             n_step_state.append(obs)
