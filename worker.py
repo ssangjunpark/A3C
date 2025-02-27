@@ -75,7 +75,7 @@ class Worker:
         parent_policy_model.optimizer.apply_gradients(zip(policy_gradients, parent_policy_model.model.trainable_variables))
         parent_value_model.optimizer.apply_gradients(zip(value_gradients, parent_value_model.model.trainable_variables))
             
-        print(f"Worker {self.id_} parent param update successfully!")
+        # print(f"Worker {self.id_} parent param update successfully!")
 
     
     def play_episode(self, update_period_steps, parent_policy_model, parent_value_model):
@@ -99,7 +99,7 @@ class Worker:
         while not done:
             pi_obs = np.expand_dims(obs, axis=0).astype(np.float32)
             pi_eval = self.policy_model.predict(pi_obs)
-            print(pi_eval[0])
+            # print(pi_eval[0])
             action = np.random.choice(self.env.action_space.n, p=pi_eval[0].numpy())
             # print("Sum of pi_eval[0]:", np.sum(pi_eval[0]))
             #TODO: MAKE SURE TO REMOVE UNIFORM SAMPLEING
