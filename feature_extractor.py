@@ -7,11 +7,11 @@ class Feature_Extractor:
         
         self.model = tf.keras.Sequential()
 
-        for filters, kernal_size, strides in self.conv_sizes:
+        for filters, kernel_size, strides in self.conv_sizes:
             self.model.add(
-                tf.keras.layers.Conv2D(filters, kernal_size, strides, activation='relu', kernel_initializer='he_uniform')
+                tf.keras.layers.Conv2D(filters, kernel_size, strides, activation='relu', kernel_initializer='he_uniform')
             )
-
+        
         self.model.add(tf.keras.layers.Flatten())
 
         for units in self.dense_sizes:

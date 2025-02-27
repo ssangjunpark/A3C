@@ -22,18 +22,24 @@ class Policy_Model:
     def predict(self, states):
         return self.model(states)
     
-    @tf.function
+    # @tf.function
     def calculate_gradients(self, actions, states, advantages, reg_const):
         with tf.GradientTape() as tape:
 
             pi_batch_prediction = self.predict(states)
-            chosen_action_indicies = tf.stack([tf.range(actions.shape()[0]), actions], axis=1)
+            # print(pi_batch_prediction.shape)
+            # print(tf.range(actions.shape[0]))
+            # exit()
+            chosen_action_indicies = tf.stack([tf.range(actions.shape[0]), actions], axis=1)
+            # print(chosen_action_indicies.numpy())
+            # print(pi_batch_prediction)
             pi_batch = tf.gather_nd(pi_batch_prediction, chosen_action_indicies)
+            # print(pi_batch.numpy())
 
             # entropy to encourage exploration 
-            entropy = -tf.reduce_sum(pi_batch * tf.log(pi_batch), axis=1) 
+            entropy = -tf.reduce_sum(pi_batch * tf.math.log(pi_batch)) 
              
-            loss = 1 * tf.log(pi_batch) * advantages + reg_const * entropy
+            loss = tf.math.log(pi_batch) * advantages + reg_const * entropy
             loss = -tf.reduce_sum(loss)
 
         gradients = tape.gradient(loss, self.model.trainable_variables)
