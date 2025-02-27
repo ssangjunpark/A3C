@@ -16,6 +16,7 @@ def create_networks(action_space_size, feature_extractor_conv_sizes, feature_ext
 
 
 def image_transformer(image, new_size):
+    image = image / 255.0
     gray_scaled = tf.image.rgb_to_grayscale(image)
 
     resized = tf.image.resize(gray_scaled, [new_size[0], new_size[1]], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
