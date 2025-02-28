@@ -45,7 +45,7 @@ def main():
 
     returns_per_episode = []
 
-    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode)
+    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode, num_workers = 30)
 
     # print(workers)
     # exit()
@@ -60,20 +60,6 @@ def main():
         t.join()
 
 
-    # lock = threading.Lock()
-    
-    # #start worker threads later lol i dont want to do this right now
-    # worker_threads = []
-    # for worker in workers:
-    #     worker_function = lambda: worker.run(TOTAL_NUMBER_OF_STEPS, UPDATE_PERIOD_STEPS, parent_policy_model, parent_value_model)
-    #     t = threading.Thread(target=worker_function)
-    #     t.start()
-    #     worker_threads.append(t)
-
-
-    # for t in worker_threads:
-    #     t.join()
-
     # print(returns_per_episode)
 
     # worker = Worker(1, "ALE/Breakout-v5", MODEL_SIZE_INITIALIZAER, thread_safe_global_counter, returns_per_episode)
@@ -82,5 +68,5 @@ def main():
 
 
 if __name__ == "__main__":
-    with tf.device('/gpu:0'):
+    with tf.device('/GPU:0'):
         main()
