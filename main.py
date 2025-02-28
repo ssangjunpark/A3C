@@ -45,7 +45,7 @@ def main():
 
     returns_per_episode = []
 
-    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode, num_workers = 30)
+    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode, num_workers = 10)
 
     # print(workers)
     # exit()
@@ -68,5 +68,5 @@ def main():
 
 
 if __name__ == "__main__":
-    with tf.device('/GPU:0'):
+    with tf.device('/CPU:0'):
         main()
