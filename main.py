@@ -45,7 +45,7 @@ def main():
 
     returns_per_episode = []
 
-    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode, num_workers = 10)
+    workers = instantiate_workers(thread_safe_global_counter, returns_per_episode, num_workers = -1)
 
     # print(workers)
     # exit()
