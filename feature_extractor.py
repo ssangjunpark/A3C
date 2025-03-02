@@ -7,6 +7,8 @@ class Feature_Extractor:
         
         self.model = tf.keras.Sequential()
 
+        self.model.add(tf.keras.layers.InputLayer(input_shape=(84,84,4)))
+
         for filters, kernel_size, strides in self.conv_sizes:
             self.model.add(
                 tf.keras.layers.Conv2D(filters, kernel_size, strides, activation='relu', kernel_initializer='he_uniform')

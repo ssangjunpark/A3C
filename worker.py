@@ -144,12 +144,12 @@ class Worker:
 
             rewards_at_terminal += reward
             obs_transformed = image_transformer(observation, [84, 84])
-            print("before obs", obs.shape)
-            print("before obs t", obs_transformed.shape)
+            # print("before obs", obs.shape)
+            # print("before obs t", obs_transformed.shape)
             obs_transformed = np.expand_dims(obs_transformed, axis=2)
-            print("after obs t", obs_transformed.shape)
+            # print("after obs t", obs_transformed.shape)
             obs = np.concatenate([obs[:, :, 1:], obs_transformed], axis=2)
-            print("after obs", obs.shape)
+            # print("after obs", obs.shape)
         
         print(f"Worker ID:{self.id_}   Reward: {rewards_at_terminal}")
         self.return_list.append(rewards_at_terminal)
