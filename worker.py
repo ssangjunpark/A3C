@@ -10,12 +10,13 @@ from util import create_networks, image_transformer
 gym.register_envs(ale_py)
 
 class Worker:
-    def __init__(self, id_, environmen_id, model_size_initializers, global_counter, return_list):
+    def __init__(self, id_, environmen_id, model_size_initializers, global_counter, return_list, param_lock):
         self.id_ = id_
         self.env = gym.make(environmen_id, render_mode='rgb_array')
         # self.env = RecordVideo(self.env, video_folder='test', episode_trigger= lambda x : True)
         self.global_counter = global_counter
         self.return_list = return_list
+        self.param_lock = param_lock
 
         # create own copy of models
         # self.policy_model, self.value_model = create_networks(self.env.action_space.n, model_size_initializers[0], model_size_initializers[1], model_size_initializers[2], model_size_initializers[3])
@@ -30,8 +31,9 @@ class Worker:
         lol.close()
 
     def copy_param_from_parent(self, parent_policy_model, parent_value_model):
-        self.policy_model.model.set_weights(parent_policy_model.model.get_weights())
-        self.value_model.model.set_weights(parent_value_model.model.get_weights())
+        with self.param_lock:
+            self.policy_model.model.set_weights(parent_policy_model.model.get_weights())
+            self.value_model.model.set_weights(parent_value_model.model.get_weights())
         # noice
 
     def update_parnet_param(self, states, actions, rewards, dones, parent_policy_model, parent_value_model):
@@ -51,8 +53,10 @@ class Worker:
 
         actions = np.array(actions).astype(np.int32)
         states = np.array(states).astype(np.float32)
-        advantages = np.array(advantages[::-1]).astype(np.float32)
-        returns = np.array(returns[::-1]).astype(np.float32)
+        advantages = advantages[::-1]
+        returns = returns[::-1]
+        advantages = np.array(advantages).astype(np.float32)
+        returns = np.array(returns).astype(np.float32)
         advantages = np.squeeze(advantages)
         returns = np.squeeze(returns)
 
@@ -72,8 +76,9 @@ class Worker:
         #     print(f"Gradient {i} shape: {grad.shape}, Variable {i} shape: {var.shape}")
 
         # exit()
-        parent_policy_model.optimizer.apply_gradients(zip(policy_gradients, parent_policy_model.model.trainable_variables))
-        parent_value_model.optimizer.apply_gradients(zip(value_gradients, parent_value_model.model.trainable_variables))
+        with self.param_lock:
+            parent_policy_model.optimizer.apply_gradients(zip(policy_gradients, parent_policy_model.model.trainable_variables))
+            parent_value_model.optimizer.apply_gradients(zip(value_gradients, parent_value_model.model.trainable_variables))
             
         # print(f"Worker {self.id_} parent param update successfully!")
 

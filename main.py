@@ -25,9 +25,11 @@ def instantiate_workers(thread_safe_global_counter, returns_per_episode, num_wor
     workers = []
     if (num_workers == -1) or (num_workers > multiprocessing.cpu_count()):
         num_workers = multiprocessing.cpu_count()
+
+    param_lock = threading.Lock()
     
     for id in range(num_workers):
-        worker = Worker(id, "ALE/Breakout-v5", MODEL_SIZE_INITIALIZAER, thread_safe_global_counter, returns_per_episode)
+        worker = Worker(id, "ALE/Breakout-v5", MODEL_SIZE_INITIALIZAER, thread_safe_global_counter, returns_per_episode, param_lock)
         workers.append(worker)
 
     return workers
