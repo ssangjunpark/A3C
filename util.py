@@ -20,7 +20,7 @@ def image_transformer(image, new_size):
     gray_scaled = tf.image.rgb_to_grayscale(image)
 
     resized = tf.image.resize(gray_scaled, [new_size[0], new_size[1]], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
-    return tf.squeeze(resized, axis=-1).numpy().astype(np.float32)
+    return tf.squeeze(resized, axis=-1)
 
 def smooth(arr, interval=100):
     arr = np.array(arr)
