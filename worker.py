@@ -68,10 +68,10 @@ class Worker:
         advantages = np.array(advantages[::-1], dtype=np.float32).reshape(-1, 1)
 
 
-        print(actions.shape)
-        print(states.shape)
-        print(advantages.shape)
-        print(returns.shape)
+        # print(actions.shape)
+        # print(states.shape)
+        # print(advantages.shape)
+        # print(returns.shape)
         # exit()
 
 
