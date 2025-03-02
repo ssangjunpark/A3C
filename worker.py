@@ -56,7 +56,7 @@ class Worker:
             advantage = g - self.value_model.predict(np.expand_dims(states[i], axis=0).astype(np.float32))[0][0]
             advantages.append(advantage)
 
-        actions = np.array(actions).astype(np.int32)
+        actions = np.array(actions).astype(np.int32).flatten()
         states = np.array(states).astype(np.float32)
         # advantages = advantages[::-1]
         # returns = returns[::-1]
@@ -153,6 +153,7 @@ class Worker:
             # print("after obs t", obs_transformed.shape)
             obs = np.concatenate([obs[:, :, 1:], obs_transformed], axis=2)
             # print("after obs", obs.shape)
+            assert obs.shape == (84,84,4), f"Unexpected state shape: {obs.shape}"
         
         print(f"Worker ID:{self.id_}   Reward: {rewards_at_terminal}")
         self.return_list.append(rewards_at_terminal)
