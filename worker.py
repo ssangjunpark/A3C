@@ -75,8 +75,9 @@ class Worker:
         # exit()
 
 
-        policy_gradients = self.policy_model.calculate_gradients(actions, states, advantages, 0.01)
-        value_gradients = self.value_model.calculate_gradients(states, returns)
+        with self.param_lock:
+            policy_gradients = self.policy_model.calculate_gradients(actions, states, advantages, 0.01)
+            value_gradients = self.value_model.calculate_gradients(states, returns)
 
         # print('nice work!')
 

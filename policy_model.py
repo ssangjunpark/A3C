@@ -45,7 +45,6 @@ class Policy_Model:
 
             # entropy to encourage exploration 
             entropy = -tf.reduce_sum(pi_batch_prediction * tf.math.log(pi_batch_prediction + eps)) 
-             
             loss = tf.math.log(pi_batch + eps) * advantages + reg_const * entropy
             loss = -tf.reduce_sum(loss)
 
