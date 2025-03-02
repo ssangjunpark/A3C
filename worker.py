@@ -58,17 +58,20 @@ class Worker:
 
         actions = np.array(actions).astype(np.int32)
         states = np.array(states).astype(np.float32)
-        advantages = advantages[::-1]
-        returns = returns[::-1]
-        advantages = np.array(advantages).astype(np.float32)
-        returns = np.array(returns).astype(np.float32)
-        advantages = np.squeeze(advantages)
-        returns = np.squeeze(returns)
+        # advantages = advantages[::-1]
+        # returns = returns[::-1]
+        # advantages = np.array(advantages).astype(np.float32)
+        # returns = np.array(returns).astype(np.float32)
+        # advantages = np.squeeze(advantages)
+        # returns = np.squeeze(returns)
+        returns = np.array(returns[::-1], dtype=np.float32).reshape(-1, 1)
+        advantages = np.array(advantages[::-1], dtype=np.float32).reshape(-1, 1)
 
-        # print(actions.shape)
-        # print(states.shape)
-        # print(advantages.shape)
-        # print(returns.shape)
+
+        print(actions.shape)
+        print(states.shape)
+        print(advantages.shape)
+        print(returns.shape)
         # exit()
 
 

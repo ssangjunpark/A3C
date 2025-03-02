@@ -22,6 +22,7 @@ class Policy_Model:
     def predict(self, states):
         return self.model(states)
     
+    # @tf.function
     def calculate_gradients(self, actions, states, advantages, reg_const):
         with tf.GradientTape() as tape:
 
