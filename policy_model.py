@@ -29,16 +29,22 @@ class Policy_Model:
             # print(pi_batch_prediction.shape)
             # print(tf.range(actions.shape[0]))
             # exit()
-            chosen_action_indicies = tf.stack([tf.range(actions.shape[0]), actions], axis=1)
+            eps = 1e-10
+            pi_batch_prediction = tf.clip_by_value(pi_batch_prediction, eps, 1.0 - eps)
+
+            chosen_action_indicies = tf.stack([tf.range(actions.shape[0], dtype=tf.int32), tf.cast(actions, tf.int32)], axis=1)
             # print(chosen_action_indicies.numpy())
             # print(pi_batch_prediction)
             pi_batch = tf.gather_nd(pi_batch_prediction, chosen_action_indicies)
             # print(pi_batch.numpy())
 
+            advantages = tf.cast(advantages, tf.float32)
+            advantages = tf.reshape(advantages, [-1])
+
             # entropy to encourage exploration 
-            entropy = -tf.reduce_sum(pi_batch * tf.math.log(pi_batch)) 
+            entropy = -tf.reduce_sum(pi_batch_prediction * tf.math.log(pi_batch_prediction + eps)) 
              
-            loss = tf.math.log(pi_batch) * advantages + reg_const * entropy
+            loss = tf.math.log(pi_batch + eps) * advantages + reg_const * entropy
             loss = -tf.reduce_sum(loss)
 
         gradients = tape.gradient(loss, self.model.trainable_variables)

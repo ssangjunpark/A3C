@@ -49,12 +49,11 @@ class Worker:
         if dones[-1] == True:
             g = 0
         else:
-            g = self.value_model.predict(np.expand_dims(states[-1], axis=0).astype(np.float32))
-        
+            g = self.value_model.predict(np.expand_dims(states[-1], axis=0).astype(np.float32))[0][0]
         for i in range(len(states) - 1, -1, -1):
             g = rewards[i] + gamma * g
             returns.append(g)
-            advantage = g - self.value_model.predict(np.expand_dims(states[i], axis=0).astype(np.float32))
+            advantage = g - self.value_model.predict(np.expand_dims(states[i], axis=0).astype(np.float32))[0][0]
             advantages.append(advantage)
 
         actions = np.array(actions).astype(np.int32)
@@ -82,6 +81,11 @@ class Worker:
         #     print(f"Gradient {i} shape: {grad.shape}, Variable {i} shape: {var.shape}")
 
         # exit()
+
+        if None in policy_gradients or None in value_gradients:
+            print("Error!!! None in policy or value gradients!!!")
+            return
+        
         with self.param_lock:
             parent_policy_model.optimizer.apply_gradients(zip(policy_gradients, parent_policy_model.model.trainable_variables))
             parent_value_model.optimizer.apply_gradients(zip(value_gradients, parent_value_model.model.trainable_variables))
