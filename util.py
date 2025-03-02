@@ -14,7 +14,6 @@ def create_networks(action_space_size, feature_extractor_conv_sizes, feature_ext
 
     return policy_model, value_model
 
-
 def image_transformer(image, new_size):
     image = image / 255.0
     gray_scaled = tf.image.rgb_to_grayscale(image)
@@ -22,3 +21,12 @@ def image_transformer(image, new_size):
     resized = tf.image.resize(gray_scaled, [new_size[0], new_size[1]], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
 
     return tf.squeeze(resized).numpy().astype(np.float32)
+
+def smooth(arr, interval=100):
+    arr = np.array(arr)
+    smooth_arr = np.empty(arr.size)
+    
+    for i in range(arr.size):
+        smooth_arr[i] = np.mean(arr[max(i - interval, 0) : i+1])
+    
+    return smooth_arr

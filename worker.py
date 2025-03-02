@@ -10,13 +10,14 @@ from util import create_networks, image_transformer
 gym.register_envs(ale_py)
 
 class Worker:
-    def __init__(self, id_, environmen_id, model_size_initializers, global_counter, return_list, param_lock):
+    def __init__(self, id_, environmen_id, model_size_initializers, global_counter, episode_counter, return_list, param_lock):
         self.id_ = id_
         self.env = gym.make(environmen_id, render_mode='rgb_array')
         # self.env = RecordVideo(self.env, video_folder='test', episode_trigger= lambda x : True)
         self.global_counter = global_counter
         self.return_list = return_list
         self.param_lock = param_lock
+        self.episode_counter = episode_counter
 
         # create own copy of models
         # self.policy_model, self.value_model = create_networks(self.env.action_space.n, model_size_initializers[0], model_size_initializers[1], model_size_initializers[2], model_size_initializers[3])
@@ -36,6 +37,11 @@ class Worker:
             self.value_model.model.set_weights(parent_value_model.model.get_weights())
         # noice
 
+    def save_parent_parameter(self, parent_policy_model, parent_value_model, policy_file_name, value_file_name):
+        with self.param_lock:
+            parent_policy_model.model.save_weights(policy_file_name)
+            parent_value_model.model.save_weights(value_file_name)
+            
     def update_parnet_param(self, states, actions, rewards, dones, parent_policy_model, parent_value_model):
         advantages = []
         returns = []
@@ -139,11 +145,15 @@ class Worker:
         print(f"Worker ID:{self.id_}   Reward: {rewards_at_terminal}")
         self.return_list.append(rewards_at_terminal)
 
-        return global_step
+        global_episode_count = next(self.episode_counter)
 
+        return global_step, global_episode_count
 
     def run(self, total_number_of_steps, update_period_steps, parent_policy_model, parent_value_model):
         global_step = 0
         while (total_number_of_steps > global_step):
-            global_step = self.play_episode(update_period_steps, parent_policy_model, parent_value_model)
-            print(global_step)
+            global_step, global_episode_count = self.play_episode(update_period_steps, parent_policy_model, parent_value_model)
+            print("Global timestep: ", global_step, "     Global episode: ", global_episode_count)
+            if global_episode_count % 100 == 0:
+                self.save_parent_parameter(parent_policy_model, parent_value_model, f'weights/policy_weights{global_episode_count}.weights.h5', f'weights/value_weights{global_episode_count}.weights.h5')
+                print("Weights Successfully saved!")
