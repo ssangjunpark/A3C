@@ -16,7 +16,8 @@ from util import create_networks, image_transformer, smooth
 gym.register_envs(ale_py)
 
 
-TOTAL_NUMBER_OF_STEPS = 1000000000
+# TOTAL_NUMBER_OF_STEPS = 1000000000
+TOTAL_NUMBER_OF_STEPS = 1300000
 UPDATE_PERIOD_STEPS = 5
 
 MODEL_SIZE_INITIALIZAER = [[(16, 8, 4), (32, 4, 2)], [256], [], []]
