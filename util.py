@@ -15,6 +15,7 @@ def create_networks(action_space_size, feature_extractor_conv_sizes, feature_ext
 
     return policy_model, value_model
 
+# @tf.function
 def image_transformer(image, new_size):
     image = image / 255.0
     gray_scaled = tf.image.rgb_to_grayscale(image)

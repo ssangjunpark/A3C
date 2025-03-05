@@ -67,6 +67,10 @@ class Worker:
         returns = np.array(returns[::-1], dtype=np.float32).reshape(-1, 1)
         advantages = np.array(advantages[::-1], dtype=np.float32).reshape(-1, 1)
 
+        # actions = tf.convert_to_tensor(actions, dtype=tf.int32)
+        # states = tf.convert_to_tensor(states, dtype=tf.float32)
+        # returns = tf.reshape(tf.cast(tf.reverse(returns, axis=[0]), dtype=tf.float32), (-1, 1))
+        # advantages = tf.reshape(tf.cast(tf.reverse(advantages, axis=[0]), dtype=tf.float32), (-1, 1))
 
         # print(actions.shape)
         # print(states.shape)

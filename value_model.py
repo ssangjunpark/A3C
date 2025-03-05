@@ -19,8 +19,7 @@ class Value_Model:
 
     def predict(self, states):
         return self.model(states)
-    
-    # @tf.function
+
     def calculate_gradients(self, states, returns):
         with tf.GradientTape() as tape:
             
