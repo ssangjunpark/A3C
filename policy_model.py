@@ -1,6 +1,8 @@
 import tensorflow as tf
 import numpy as np
 
+from constants import OPTIMISER_RMS_HYP
+
 class Policy_Model:
     def __init__(self, feature_extractor, action_space_size, dense_size):
         self.feature_extractor = feature_extractor
